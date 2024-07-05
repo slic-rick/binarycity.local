@@ -8,7 +8,7 @@ trait Controller
 	{
 		if (!empty($data)) {
 			extract($data);
-			show($data);
+			// show($data);
 		}
 
 		$filename = "../app/views/" . $name . ".view.php";

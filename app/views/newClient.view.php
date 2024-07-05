@@ -77,7 +77,7 @@
                     <span class="text-gray-700">Select Contacts</span>
                     <select id="contacts-select" name="contacts[]" multiple class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
                         <?php foreach ($contacts as $contact) : ?>
-                            <option value="<?php echo $contact['id']; ?>"><?php echo $contact['name']; ?></option>
+                            <option value="<?php echo $contact['Id']; ?>"><?php echo $contact['Name']; ?></option>
                         <?php endforeach; ?>
                     </select>
                 </label>
