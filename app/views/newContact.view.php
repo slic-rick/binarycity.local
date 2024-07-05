@@ -16,9 +16,11 @@
 
 
 <body class="bg-indigo-50 font-['Outfit']">
-
+    <?php
+    echo $errors ?? '';
+    ?>
     <section class="max-w-2xl mx-auto mt-12 p-4 bg-white shadow-md border border-gray-200 rounded">
-        <form action="/register" method="POST" class="grid grid-cols-1 gap-6">
+        <form action="/newContact" method="POST" class="grid grid-cols-1 gap-6">
             <!-- Name -->
             <label class="block">
                 <span class="text-gray-700">Name</span>

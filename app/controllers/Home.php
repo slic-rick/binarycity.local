@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 /**
  * home class
@@ -9,8 +9,13 @@ class Home
 
 	public function index()
 	{
+		$client = new Client;
 
-		$this->view('home');
+		$clients = $client->findAll();
+
+		$data['clients'] = $clients;
+
+		// show($data);
+		$this->view('home', $data);
 	}
-
 }

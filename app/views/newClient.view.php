@@ -71,17 +71,23 @@
                     <span class="text-gray-700">Name</span>
                     <input value="<?php echo $data['name'] ?? ''; ?>" id="name" name="name" type="text" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" placeholder="Client Name" required />
                 </label>
+
+                <!-- Contacts -->
+                <label class="block mt-4">
+                    <span class="text-gray-700">Select Contacts</span>
+                    <select id="contacts-select" name="contacts[]" multiple class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
+                        <?php foreach ($contacts as $contact) : ?>
+                            <option value="<?php echo $contact['id']; ?>"><?php echo $contact['name']; ?></option>
+                        <?php endforeach; ?>
+                    </select>
+                </label>
             </div>
 
             <!-- Contacts Tab -->
             <div id="contacts" class="tab-content hidden">
-                <!-- Placeholder for contacts linking functionality -->
                 <p>Link contacts to this client.</p>
-                <!-- Example of a list of linked contacts -->
-                <ul>
-                    <li>Contact 1 <a href="#">Unlink</a></li>
-                    <li>Contact 2 <a href="#">Unlink</a></li>
-                    <li>Contact 3 <a href="#">Unlink</a></li>
+                <ul id="linked-contacts-list">
+                    <!-- Linked contacts will be populated here by JavaScript -->
                 </ul>
             </div>
 
@@ -102,6 +108,8 @@
         const submitButton = document.getElementById('submit-button');
         const errorMessages = document.getElementById('error-messages');
         const errorText = document.getElementById('error-text');
+        const contactsSelect = document.getElementById('contacts-select');
+        const linkedContactsList = document.getElementById('linked-contacts-list');
 
         tabs.forEach(tab => {
             tab.addEventListener('click', function(event) {
@@ -113,6 +121,7 @@
                 if (this.getAttribute('href') === '#contacts') {
                     nextButton.classList.add('hidden');
                     submitButton.classList.remove('hidden');
+                    populateLinkedContacts();
                 } else {
                     nextButton.classList.remove('hidden');
                     submitButton.classList.add('hidden');
@@ -142,6 +151,32 @@
                 tabContents[1].classList.remove('hidden');
                 nextButton.classList.add('hidden');
                 submitButton.classList.remove('hidden');
+                populateLinkedContacts();
             }
         });
+
+        function populateLinkedContacts() {
+            linkedContactsList.innerHTML = '';
+            const selectedContacts = Array.from(contactsSelect.selectedOptions).map(option => ({
+                id: option.value,
+                name: option.text
+            }));
+
+            selectedContacts.forEach(contact => {
+                const listItem = document.createElement('li');
+                listItem.textContent = `${contact.name} `;
+                const unlinkButton = document.createElement('a');
+                unlinkButton.href = '#';
+                unlinkButton.textContent = 'Unlink';
+                unlinkButton.addEventListener('click', function(event) {
+                    event.preventDefault();
+                    // Remove contact from the linked contacts list
+                    linkedContactsList.removeChild(listItem);
+                    // Unselect the contact in the select element
+                    contactsSelect.querySelector(`option[value="${contact.id}"]`).selected = false;
+                });
+                listItem.appendChild(unlinkButton);
+                linkedContactsList.appendChild(listItem);
+            });
+        }
     </script>
