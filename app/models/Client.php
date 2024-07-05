@@ -1,45 +1,16 @@
 <?php
 
-
-/**
- * User class
- */
 class Client
 {
-
     use Model;
 
     protected $table = 'clients';
+    protected $allowedColumns = ['name', 'clientCode']; // Add any other fields as necessary
 
-    protected $allowedColumns = [
-
-        'clientCode',
-        'name',
-    ];
-
-    public function validate($data)
+    public function clientCodeExists($clientCode)
     {
-        $this->errors = [];
-
-        if (empty($data['email'])) {
-            $this->errors['email'] = "Email is required";
-        } else
-		if (!filter_var($data['email'], FILTER_VALIDATE_EMAIL)) {
-            $this->errors['email'] = "Email is not valid";
-        }
-
-        if (empty($data['password'])) {
-            $this->errors['password'] = "Password is required";
-        }
-
-        if (empty($data['terms'])) {
-            $this->errors['terms'] = "Please accept the terms and conditions";
-        }
-
-        if (empty($this->errors)) {
-            return true;
-        }
-
-        return false;
+        $query = "SELECT * FROM $this->table WHERE clientCode = :clientCode LIMIT 1";
+        $result = $this->query($query, ['clientCode' => $clientCode]);
+        return !empty($result);
     }
 }

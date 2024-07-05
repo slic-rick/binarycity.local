@@ -35,11 +35,8 @@
             </button>
         </form>
     </section> -->
-
-
     <section class="max-w-2xl mx-auto mt-12 p-4 bg-white shadow-md border border-gray-200 rounded">
-        <form action="/registerClient" method="POST" class="grid grid-cols-1 gap-6">
-
+        <form action="/newClient" method="POST" class="grid grid-cols-1 gap-6">
             <!-- Tabs -->
             <div class="tabs">
                 <ul class="flex border-b">
@@ -54,16 +51,25 @@
 
             <!-- General Tab -->
             <div id="general" class="tab-content">
+                <!-- Display errors -->
+                <?php if (!empty($errors)) : ?>
+                    <div id="error-messages" class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
+                        <strong class="font-bold">Error(s):</strong>
+                        <span id="error-text" class="block sm:inline">
+                            <?php echo implode('<br>', $errors); ?>
+                        </span>
+                    </div>
+                <?php else : ?>
+                    <div id="error-messages" class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative hidden" role="alert">
+                        <strong class="font-bold">Error(s):</strong>
+                        <span id="error-text" class="block sm:inline"></span>
+                    </div>
+                <?php endif; ?>
+
                 <!-- Name -->
                 <label class="block">
                     <span class="text-gray-700">Name</span>
-                    <input value="<?php echo $oldFormData['name'] ?? ''; ?>" name="name" type="text" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" placeholder="Client Name" required />
-                </label>
-
-                <!-- Client Code -->
-                <label class="block">
-                    <span class="text-gray-700">Client Code</span>
-                    <input value="<?php echo $oldFormData['clientCode'] ?? ''; ?>" name="clientCode" type="text" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" placeholder="Client Code" readonly />
+                    <input value="<?php echo $data['name'] ?? ''; ?>" id="name" name="name" type="text" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50" placeholder="Client Name" required />
                 </label>
             </div>
 
@@ -94,6 +100,8 @@
         const tabContents = document.querySelectorAll('.tab-content');
         const nextButton = document.getElementById('next-button');
         const submitButton = document.getElementById('submit-button');
+        const errorMessages = document.getElementById('error-messages');
+        const errorText = document.getElementById('error-text');
 
         tabs.forEach(tab => {
             tab.addEventListener('click', function(event) {
@@ -113,11 +121,27 @@
         });
 
         nextButton.addEventListener('click', function() {
-            tabs.forEach(t => t.classList.remove('border-l', 'border-t', 'border-r', 'rounded-t', 'text-blue-700'));
-            tabs[1].classList.add('border-l', 'border-t', 'border-r', 'rounded-t', 'text-blue-700');
-            tabContents[0].classList.add('hidden');
-            tabContents[1].classList.remove('hidden');
-            nextButton.classList.add('hidden');
-            submitButton.classList.remove('hidden');
+            // Validate the general tab before moving to the next tab
+            const name = document.getElementById('name').value.trim();
+            let errors = [];
+
+            if (!name) {
+                errors.push("Name is required.");
+            }
+
+            if (errors.length > 0) {
+                // Display errors
+                errorText.innerHTML = errors.join('<br>');
+                errorMessages.classList.remove('hidden');
+            } else {
+                // Clear errors and move to the contacts tab
+                errorMessages.classList.add('hidden');
+                tabs.forEach(t => t.classList.remove('border-l', 'border-t', 'border-r', 'rounded-t', 'text-blue-700'));
+                tabs[1].classList.add('border-l', 'border-t', 'border-r', 'rounded-t', 'text-blue-700');
+                tabContents[0].classList.add('hidden');
+                tabContents[1].classList.remove('hidden');
+                nextButton.classList.add('hidden');
+                submitButton.classList.remove('hidden');
+            }
         });
     </script>
