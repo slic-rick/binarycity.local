@@ -2,12 +2,14 @@
 
 trait Database
 {
-
+	private $connection;
 	private function connect()
 	{
-		$string = "mysql:hostname=" . DBHOST . ";dbname=" . DBNAME;
-		$con = new PDO($string, DBUSER, DBPASS);
-		return $con;
+		if ($this->connection === null) {
+			$string = "mysql:hostname=" . DBHOST . ";dbname=" . DBNAME;
+			$this->connection = new PDO($string, DBUSER, DBPASS);
+		}
+		return $this->connection;
 	}
 
 	public function query($query, $data = [])

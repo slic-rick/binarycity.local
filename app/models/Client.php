@@ -10,7 +10,8 @@ class Client
         'name',
         'email',
         'clientCode',
-        // Add other columns here
+        'linked_contacts'
+
     ];
 
     // Method to check if a client code exists
@@ -27,5 +28,15 @@ class Client
     {
         $con = $this->connect();
         return $con->lastInsertId();
+    }
+
+    // Method to increment the linked contacts count
+    public function incrementLinkedContactsCount($clientId)
+    {
+        $client = $this->first(['id' => $clientId]);
+        if ($client) {
+            $newCount = $client['linked_contacts'] + 1;
+            $this->update($clientId, ['linked_contacts' => $newCount]);
+        }
     }
 }

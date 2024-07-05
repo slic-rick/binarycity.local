@@ -9,7 +9,7 @@ class ContactClients
 
     use Model;
 
-    protected $table = 'contact clients';
+    protected $table = "`contact clients`";
 
     protected $allowedColumns = [
 

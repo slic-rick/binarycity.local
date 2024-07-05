@@ -40,12 +40,16 @@ class NewClient
 							'contactId' => $id,
 							'clientId' => $clientId
 						];
+						//show($client_contact);
 						$contactClient->insert($client_contact);
+
+						// update the counter for the number of linked contacts
+						$client->incrementLinkedContactsCount($clientId);
 					}
 				}
 
 				// Redirect to a success page or another appropriate page
-				header('Location: /success'); // Change the URL to your success page
+				header('Location: /'); // Change the URL to your success page
 				exit;
 			} else {
 				$data['errors'] = $errors;
